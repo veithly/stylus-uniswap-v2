@@ -82,8 +82,7 @@ impl UniswapV2Pair {
         let amount0 = balance0.checked_sub(_reserve0).ok_or("balance0-reserve0 overflow")?;
         let amount1 = balance1.checked_sub(_reserve1).ok_or("balance1-reserve1 overflow")?;
 
-        // let fee_on = self._mintFee(_reserve0, _reserve1)?;
-        let fee_on = false;
+        let fee_on = self._mint_fee(_reserve0, _reserve1)?;
         let total_supply = self.token.total_supply()?;
 
         let liquidity = if total_supply == U256::ZERO {
@@ -127,8 +126,7 @@ impl UniswapV2Pair {
             .balance_of(&*self, contract::address())?;
         let liquidity = self.token.balance_of(contract::address())?;
 
-        // let fee_on = self._mintFee(_reserve0, _reserve1)?;
-        let fee_on = false;
+        let fee_on = self._mint_fee(_reserve0, _reserve1)?;
         let _total_supply = self.token.total_supply()?;
         let amount0 = liquidity.checked_mul(balance0).unwrap() / _total_supply;
         let amount1 = liquidity.checked_mul(balance1).unwrap() / _total_supply;
@@ -288,8 +286,7 @@ impl UniswapV2Pair {
     }
 
     pub fn _mint_fee(&mut self, reserve0: U256, reserve1: U256) -> Result<bool, Vec<u8>> {
-        // No fee switch
-        let fee_on = false;
+        let fee_on = true;
         let k_last = self.k_last.get();
         if fee_on {
             if k_last != U256::ZERO {
